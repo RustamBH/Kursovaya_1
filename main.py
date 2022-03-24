@@ -66,22 +66,14 @@ def get_profile_photos(usr_items_list):
     max_profile_photo_list = []
     user_params_list = []
     for item in usr_items_list:
-        photo_params_dict = {}
-        max_size = 1
+        photo_params_dict = {}        
         photo_params_dict['id'] = item['id']
         photo_params_dict['date'] = item['date']
-        photo_params_dict['user_likes'] = item['likes']['count']
-        user_params_list.append(item['likes']['count'])
-        photo_params_list = item['sizes']
-
-        for photo_param in photo_params_list:            
-            if photo_param['height'] * photo_param['width'] > max_size:
-                max_size = photo_param['height'] * photo_param['width']                
-                photo_params_dict['url'] = photo_param['url']
-                photo_params_dict['size'] = max_size
-            elif photo_param['height'] * photo_param['width'] == 0:
-                photo_params_dict['url'] = None
-                photo_params_dict['size'] = 0
+        photo_params_dict['user_likes'] = item['likes']['count']        
+        photo_params_dict['url'] = item['sizes'][-1]['url']
+        photo_params_dict['size'] = item['sizes'][-1]['width']*item['sizes'][-1]['height']        
+        
+        user_params_list.append(item['likes']['count'])        
         max_profile_photo_list.append(photo_params_dict)
     return max_profile_photo_list, user_params_list
 
