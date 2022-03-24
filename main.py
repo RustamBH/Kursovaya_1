@@ -71,7 +71,7 @@ def get_profile_photos(usr_items_list):
         photo_params_dict['date'] = item['date']
         photo_params_dict['user_likes'] = item['likes']['count']        
         photo_params_dict['url'] = item['sizes'][-1]['url']
-        photo_params_dict['size'] = item['sizes'][-1]['width']*item['sizes'][-1]['height']        
+        photo_params_dict['size'] = item['sizes'][-1]['width'] * item['sizes'][-1]['height']        
         
         user_params_list.append(item['likes']['count'])        
         max_profile_photo_list.append(photo_params_dict)
