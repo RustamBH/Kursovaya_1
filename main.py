@@ -69,7 +69,8 @@ def get_profile_photos(usr_items_list):
         photo_params_dict = {}        
         photo_params_dict['id'] = item['id']
         photo_params_dict['date'] = item['date']
-        photo_params_dict['user_likes'] = item['likes']['count']        
+        photo_params_dict['user_likes'] = item['likes']['count']
+        item['sizes'].sort(key=lambda size: size['type'])
         photo_params_dict['url'] = item['sizes'][-1]['url']
         photo_params_dict['size'] = item['sizes'][-1]['width'] * item['sizes'][-1]['height']        
         
@@ -83,23 +84,22 @@ def upload_files(photos_max_profile_list, users_param_list, n_photos=5):
     if n_photos < len(photos_max_profile_list):
         photos_max_profile_list = photos_max_profile_list[:n_photos]
 
-    for photo_profile in tqdm(photos_max_profile_list):
-        if photo_profile['size'] > 0:
-            log_file_dict = {}
-            if 'url' in photo_profile:
-                url_photo = photo_profile['url']
-                count_likes = users_param_list.count(photo_profile['user_likes'])
-                if count_likes > 1:
-                    timestamp = photo_profile['date']
-                    current_date_string = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d_%H-%M-%S')
-                    filename = str(photo_profile['user_likes']) + f"_{current_date_string}"
-                else:
-                    filename = str(photo_profile['user_likes'])
-                log_file_dict['file_name'] = filename + ".jpg"                
-                log_file_dict['size'] = str(photo_profile['size'])
-                log_upload_files_list.append(log_file_dict)
-                uploader = YaUploader(token=YA_TOKEN)
-                result = uploader.upload_url_to_disk(url_photo, filename)
+    for photo_profile in tqdm(photos_max_profile_list):        
+        log_file_dict = {}
+        if 'url' in photo_profile:
+            url_photo = photo_profile['url']
+            count_likes = users_param_list.count(photo_profile['user_likes'])
+            if count_likes > 1:
+                timestamp = photo_profile['date']
+                current_date_string = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d_%H-%M-%S')
+                filename = str(photo_profile['user_likes']) + f"_{current_date_string}"
+            else:
+                filename = str(photo_profile['user_likes'])
+            log_file_dict['file_name'] = filename + ".jpg"                
+            log_file_dict['size'] = str(photo_profile['size'])
+            log_upload_files_list.append(log_file_dict)
+            uploader = YaUploader(token=YA_TOKEN)
+            result = uploader.upload_url_to_disk(url_photo, filename)
     sleep(0.1)
     return log_upload_files_list
 
